@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>花の名前タイピングゲーム</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-image: url('C:/Users/User/Desktop/ママゲーム/植物クイズ/素材の植物背景.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        img { max-width: 300px; display: block; margin: 20px auto; }
+        input { font-size: 18px; padding: 10px; }
+        #score, #timer { font-size: 20px; }
+        #restart { display: none; font-size: 18px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>花の名前タイピングゲーム</h1>
+    <p id="score">スコア: 0</p>
+    <p id="timer">残り時間: 60秒</p>
+    <img id="flowerImage" src="" alt="花の画像">
+    <br>
+    <input type="text" id="answerInput" placeholder="花の名前を入力">
+    <button onclick="checkAnswer()">送信</button>
+    <button id="restart" onclick="restartGame()">もう一回</button>
+    <audio id="correctSound" src="アタリ.mp3"></audio>
+    <audio id="wrongSound" src="はずれ.mp3"></audio>
+    <script>
+        const data = [
+            { filename: "1_アブラナ-アブラナ.jpg", name: "アブラナ" },
+            { filename: "2_アブラナ-イヌガラシ.jpg", name: "イヌガラシ" },
+            { filename: "3_アブラナ-カブ.jpg", name: "カブ" },
+            { filename: "4_アブラナ-キャベツ.jpg", name: "キャベツ" },
+            { filename: "5_アブラナ-ダイコン.jpg", name: "ダイコン" }
+        ];
+        
+        let score = 0;
+        let timeLeft = 60;
+        let correctCount = 0;
+        let currentFlower = {};
+        let timer;
+
+        function startGame() {
+            score = 0;
+            timeLeft = 60;
+            correctCount = 0;
+            document.getElementById("score").innerText = "スコア: 0";
+            document.getElementById("timer").innerText = `残り時間: ${timeLeft}秒`;
+            document.getElementById("restart").style.display = "none";
+            nextQuestion();
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById("timer").innerText = `残り時間: ${timeLeft}秒`;
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function nextQuestion() {
+            currentFlower = data[Math.floor(Math.random() * data.length)];
+            document.getElementById("flowerImage").src = `C:/Users/User/Desktop/ママゲーム/植物クイズ/素材/${currentFlower.filename}`;
+            document.getElementById("answerInput").value = "";
+        }
+
+        function checkAnswer() {
+            let answer = document.getElementById("answerInput").value.trim();
+            if (answer === currentFlower.name) {
+                score += 10;
+                correctCount++;
+                document.getElementById("correctSound").play();
+            } else {
+                score -= 5;
+                document.getElementById("wrongSound").play();
+            }
+            document.getElementById("score").innerText = "スコア: " + score;
+            if (correctCount >= 10) {
+                endGame();
+            } else {
+                nextQuestion();
+            }
+        }
+
+        function endGame() {
+            clearInterval(timer);
+            alert(`ゲーム終了！スコア: ${score}\n残り時間: ${timeLeft}秒`);
+            document.getElementById("restart").style.display = "inline";
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        window.onload = startGame;
+    </script>
+</body>
+</html>
+
+

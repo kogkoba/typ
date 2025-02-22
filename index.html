@@ -9,27 +9,28 @@
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f8f8f8;
-            padding: 20px;
+            padding: 0;
             margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             background-image: url('https://raw.githubusercontent.com/kogkoba/typ/main/植物背景.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
         }
-        h1 {
-            background-color: #2a62d1;
-            color: white;
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-        }
         .container {
-            margin-top: 20px;
             padding: 20px;
             background: white;
             border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            display: inline-block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
         }
         img {
             width: 250px;
@@ -43,19 +44,28 @@
             font-size: 16px;
             margin: 10px;
         }
+        #continue-button {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #2a62d1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <h1>花の名前タイピングゲーム</h1>
     <div class="container">
+        <h1>花の名前タイピングゲーム</h1>
         <p>スコア: <span id="score">0</span></p>
         <p>残り時間: <span id="time">60</span>秒</p>
-        <p>花の画像</p>
         <img id="flower-image" src="" alt="花の画像">
-        <br>
         <input type="text" id="answer" placeholder="花の名前を入力">
-        <button onclick="checkAnswer()">送信</button>
         <p id="feedback"></p>
+        <button id="continue-button" onclick="restartGame()">コンティニュー</button>
     </div>
 
     <script>
@@ -73,10 +83,11 @@
         let score = 0;
         let timeLeft = 60;
         let questionCount = 0;
+        let timer;
 
         function startGame() {
             nextQuestion();
-            setInterval(updateTimer, 1000);
+            timer = setInterval(updateTimer, 1000);
         }
 
         function nextQuestion() {
@@ -112,9 +123,26 @@
         }
 
         function endGame() {
+            clearInterval(timer);
             alert("ゲーム終了！ スコア: " + score);
-            location.reload();
+            document.getElementById("continue-button").style.display = "block";
         }
+
+        function restartGame() {
+            score = 0;
+            timeLeft = 60;
+            questionCount = 0;
+            document.getElementById("score").innerText = score;
+            document.getElementById("time").innerText = timeLeft;
+            document.getElementById("continue-button").style.display = "none";
+            startGame();
+        }
+
+        document.getElementById("answer").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                checkAnswer();
+            }
+        });
 
         window.onload = startGame;
     </script>

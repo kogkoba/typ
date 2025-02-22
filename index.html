@@ -81,78 +81,23 @@
 
     <script>
         const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
-      const flowerData = [
-    { file: `${baseURL}アブラナ-アブラナ.png`, name: "アブラナ" },
-{ file: `${baseURL}アブラナ-イヌガラシ.png`, name: "イヌガラシ" },
-{ file: `${baseURL}アブラナ-カブ.png`, name: "カブ" },
-{ file: `${baseURL}アブラナ-キャベツ.png`, name: "キャベツ" },
-{ file: `${baseURL}アブラナ-ダイコン.png`, name: "ダイコン" },
-{ file: `${baseURL}アブラナ-ナズナ.png`, name: "ナズナ" },
-{ file: `${baseURL}アブラナ-ワサビ.png`, name: "ワサビ" },
-{ file: `${baseURL}イネ-イネ.png`, name: "イネ" },
-{ file: `${baseURL}イネ-エノコログサ.png`, name: "エノコログサ" },
-{ file: `${baseURL}イネ-オヒシバ.png`, name: "オヒシバ" },
-{ file: `${baseURL}イネ-コムギ.png`, name: "コムギ" },
-{ file: `${baseURL}イネ-ササ.png`, name: "ササ" },
-{ file: `${baseURL}イネ-ススキ.png`, name: "ススキ" },
-{ file: `${baseURL}イネ-スズメノカタビラ.png`, name: "スズメノカタビラ" },
-{ file: `${baseURL}イネ-スズメノテッポウ.png`, name: "スズメノテッポウ" },
-{ file: `${baseURL}イネ-タケ.png`, name: "タケ" },
-{ file: `${baseURL}イネ-トウモロコシ.png`, name: "トウモロコシ" },
-{ file: `${baseURL}イネ-メヒシバ.png`, name: "メヒシバ" },
-{ file: `${baseURL}ウリ-アマチャヅル.png`, name: "アマチャヅル" },
-{ file: `${baseURL}ウリ-カボチャ.png`, name: "カボチャ" },
-{ file: `${baseURL}ウリ-カラスウリ.png`, name: "カラスウリ" },
-{ file: `${baseURL}ウリ-キュウリ.png`, name: "キュウリ" },
-{ file: `${baseURL}ウリ-スイカ.png`, name: "スイカ" },
-{ file: `${baseURL}ウリ-ヘチマ.png`, name: "ヘチマ" },
-{ file: `${baseURL}ウリ-ユウガオ.png`, name: "ユウガオ" },
-{ file: `${baseURL}キク-オナモミ.png`, name: "オナモミ" },
-{ file: `${baseURL}キク-キク.png`, name: "キク" },
-{ file: `${baseURL}キク-コスモス.png`, name: "コスモス" },
-{ file: `${baseURL}キク-セイタカアワダチソウ.png`, name: "セイタカアワダチソウ" },
-{ file: `${baseURL}キク-センダングサ.png`, name: "センダングサ" },
-{ file: `${baseURL}キク-ダリア.png`, name: "ダリア" },
-{ file: `${baseURL}キク-タンポポ.png`, name: "タンポポ" },
-{ file: `${baseURL}キク-ノアザミ.png`, name: "ノアザミ" },
-{ file: `${baseURL}キク-ノゲシ.png`, name: "ノゲシ" },
-{ file: `${baseURL}キク-ハルジオン.png`, name: "ハルジオン" },
-{ file: `${baseURL}キク-ヒマワリ.png`, name: "ヒマワリ" },
-{ file: `${baseURL}キク-ヒメジョオン.png`, name: "ヒメジョオン" },
-{ file: `${baseURL}キク-ヒャクニチソウ.png`, name: "ヒャクニチソウ" },
-{ file: `${baseURL}キク-マーガレット.png`, name: "マーガレット" },
-{ file: `${baseURL}キク-マリーゴールド.png`, name: "マリーゴールド" },
-{ file: `${baseURL}その他-アサガオ.png`, name: "アサガオ" },
-{ file: `${baseURL}その他-アヤメ.png`, name: "アヤメ" },
-{ file: `${baseURL}その他-オオバコ.png`, name: "オオバコ" },
-{ file: `${baseURL}その他-オシロイバナ.png`, name: "オシロイバナ" },
-{ file: `${baseURL}その他-カタバミ.png`, name: "カタバミ" },
-{ file: `${baseURL}その他-グラジオラス.png`, name: "グラジオラス" },
-{ file: `${baseURL}その他-サクラ.png`, name: "サクラ" },
-{ file: `${baseURL}その他-ジャガイモ.png`, name: "ジャガイモ" },
-{ file: `${baseURL}その他-スイセン.png`, name: "スイセン" },
-{ file: `${baseURL}その他-ツツジ.png`, name: "ツツジ" },
-{ file: `${baseURL}その他-ツバキ.png`, name: "ツバキ" },
-{ file: `${baseURL}その他-ツユクサ.png`, name: "ツユクサ" },
-{ file: `${baseURL}その他-ヒガンバナ.png`, name: "ヒガンバナ" },
-{ file: `${baseURL}その他-ヒヤシンス.png`, name: "ヒヤシンス" },
-{ file: `${baseURL}その他-ホウセンカ.png`, name: "ホウセンカ" },
-{ file: `${baseURL}その他-ヤドリギ.png`, name: "ヤドリギ" },
-{ file: `${baseURL}その他-ヤマブキ.png`, name: "ヤマブキ" },
-{ file: `${baseURL}その他-ユリ.png`, name: "ユリ" },
-{ file: `${baseURL}マメ-インゲンマメ.png`, name: "インゲンマメ" },
-{ file: `${baseURL}マメ-エンドウ.png`, name: "エンドウ" },
-{ file: `${baseURL}マメ-オジギソウ.png`, name: "オジギソウ" },
-{ file: `${baseURL}マメ-カラスノエンドウ.png`, name: "カラスノエンドウ" },
-{ file: `${baseURL}マメ-クズ.png`, name: "クズ" },
-{ file: `${baseURL}マメ-ゲンゲ.png`, name: "ゲンゲ" },
-{ file: `${baseURL}マメ-シロツメグサ.png`, name: "シロツメグサ" },
-{ file: `${baseURL}マメ-スイートピー.png`, name: "スイートピー" },
-{ file: `${baseURL}マメ-ネムノキ.png`, name: "ネムノキ" },
-{ file: `${baseURL}マメ-ハギ.png`, name: "ハギ" },
-{ file: `${baseURL}マメ-フジ.png`, name: "フジ" }
-];
-
+        const flowerData = [
+            { file: `${baseURL}アブラナ-アブラナ.png`, name: "アブラナ" },
+            { file: `${baseURL}アブラナ-イヌガラシ.png`, name: "イヌガラシ" },
+            { file: `${baseURL}アブラナ-カブ.png`, name: "カブ" },
+            { file: `${baseURL}アブラナ-キャベツ.png`, name: "キャベツ" },
+            { file: `${baseURL}アブラナ-ダイコン.png`, name: "ダイコン" },
+            { file: `${baseURL}アブラナ-ナズナ.png`, name: "ナズナ" },
+            { file: `${baseURL}アブラナ-ワサビ.png`, name: "ワサビ" },
+            { file: `${baseURL}イネ-イネ.png`, name: "イネ" },
+            { file: `${baseURL}イネ-エノコログサ.png`, name: "エノコログサ" },
+            { file: `${baseURL}イネ-オヒシバ.png`, name: "オヒシバ" },
+            { file: `${baseURL}イネ-コムギ.png`, name: "コムギ" },
+            { file: `${baseURL}その他-ユリ.png`, name: "ユリ" },
+            { file: `${baseURL}マメ-ネムノキ.png`, name: "ネムノキ" },
+            { file: `${baseURL}マメ-ハギ.png`, name: "ハギ" },
+            { file: `${baseURL}マメ-フジ.png`, name: "フジ" }
+        ];
 
         let currentFlower = {};
         let score = 0;
@@ -160,16 +105,10 @@
         let questionCount = 0;
 
         function startGame() {
-           document.getElementById("answer").addEventListener("keypress", function (event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        checkAnswer();
-        if (document.getElementById("feedback").innerText === "違います！") {
-            nextQuestion();  // 間違えたら自動的に次の問題に進む
+            document.getElementById("continue-button").style.display = "none";
+            nextQuestion();
+            setInterval(updateTimer, 1000);
         }
-    }
-});
-
 
         function nextQuestion() {
             if (questionCount >= 10 || timeLeft <= 0) {
@@ -180,54 +119,17 @@
             currentFlower = flowerData[Math.floor(Math.random() * flowerData.length)];
             document.getElementById("flower-image").src = currentFlower.file;
             document.getElementById("answer").value = "";
-            questionCount++;
-        }
-
-        function checkAnswer() {
-            let answer = document.getElementById("answer").value.trim();
-            answer = answer.replace(/[\u3040-\u309F]/g, (match) => 
-                String.fromCharCode(match.charCodeAt(0) + 96)
-            );
-
-            if (answer === currentFlower.name) {
-                score++;
-                document.getElementById("feedback").innerText = "正解！";
-                nextQuestion();
-            } else {
-                document.getElementById("feedback").innerText = "違います！";
-                document.getElementById("correct-answer").innerText = `正解: ${currentFlower.name}`;
-            }
-            document.getElementById("score").innerText = score;
-        }
-
-        function updateTimer() {
-            if (timeLeft > 0) {
-                timeLeft--;
-                document.getElementById("time").innerText = timeLeft;
-            } else {
-                endGame();
-            }
-        }
-
-        function endGame() {
-            alert(`ゲーム終了！ スコア: ${score}`);
-            document.getElementById("continue-button").style.display = "block";
-        }
-
-        function restartGame() {
-            score = 0;
-            timeLeft = 60;
-            questionCount = 0;
-            document.getElementById("score").innerText = score;
-            document.getElementById("time").innerText = timeLeft;
             document.getElementById("feedback").innerText = "";
-            startGame();
+            questionCount++;
         }
 
         document.getElementById("answer").addEventListener("keypress", function (event) {
             if (event.key === "Enter") {
                 event.preventDefault();
                 checkAnswer();
+                if (document.getElementById("feedback").innerText === "違います！") {
+                    nextQuestion();
+                }
             }
         });
 

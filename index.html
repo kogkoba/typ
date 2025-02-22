@@ -160,10 +160,16 @@
         let questionCount = 0;
 
         function startGame() {
-            document.getElementById("continue-button").style.display = "none";
-            nextQuestion();
-            setInterval(updateTimer, 1000);
+           document.getElementById("answer").addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        checkAnswer();
+        if (document.getElementById("feedback").innerText === "違います！") {
+            nextQuestion();  // 間違えたら自動的に次の問題に進む
         }
+    }
+});
+
 
         function nextQuestion() {
             if (questionCount >= 10 || timeLeft <= 0) {

@@ -9,18 +9,12 @@
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f8f8f8;
-            padding: 0;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            padding: 20px;
             background-image: url('https://raw.githubusercontent.com/kogkoba/typ/main/%E6%A4%8D%E7%89%A9%E8%83%8C%E6%99%AF.jpg');
             background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
         }
         .container {
+            margin: auto;
             padding: 20px;
             background: white;
             border-radius: 10px;
@@ -28,68 +22,35 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-        h1 {
-            background-color: #2a62d1;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .question {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        #correct-answer {
-            font-size: 18px;
-            font-weight: bold;
-            color: red;
-            display: none;
-            margin-bottom: 10px;
-        }
-        .image-container {
-            width: 250px;
-            height: 250px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            background-color: #fff;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+            width: 250px;
+            height: 250px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
         }
-        input {
+        input, button {
             padding: 10px;
             font-size: 16px;
-            margin-top: 10px;
-            width: 80%;
-            text-align: center;
+            margin: 10px;
         }
-        button {
-            padding: 10px 20px;
+        #correct-answer {
             font-size: 16px;
-            margin-top: 10px;
-            background-color: #2a62d1;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            color: red;
+            margin-bottom: 10px;
+            display: none;
         }
         #continue-button {
             display: none;
             margin-top: 20px;
             padding: 10px 20px;
-            font-size: 18px;
+            font-size: 16px;
             background-color: #2a62d1;
             color: white;
             border: none;
@@ -101,74 +62,99 @@
 <body>
     <div class="container">
         <h1>花の名前タイピングゲーム</h1>
-        <p class="question">この花の名前は？</p>
-        <p id="correct-answer"></p>
-        <div class="image-container">
-            <img id="flower-image" src="" alt="花の画像">
-        </div>
         <p>スコア: <span id="score">0</span></p>
         <p>残り時間: <span id="time">60</span>秒</p>
-        <input type="text" id="answer" placeholder="花の名前をカタカナで入力">
-        <p id="feedback"></p>
+        <p id="correct-answer"></p>
+        <img id="flower-image" src="" alt="花の画像">
+        <input type="text" id="answer" placeholder="花の名前を入力">
         <button onclick="checkAnswer()">送信</button>
+        <p id="feedback"></p>
         <button id="continue-button" onclick="restartGame()">コンティニュー</button>
     </div>
 
     <script>
-     function checkAnswer() {
-    let inputField = document.getElementById("answer");
-    let answer = inputField.value.trim();
+        const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
+        const flowerData = [
+            { file: `${baseURL}その他-アサガオ.png`, name: "アサガオ" },
+            { file: `${baseURL}その他-アヤメ.png`, name: "アヤメ" },
+            { file: `${baseURL}その他-オオバコ.png`, name: "オオバコ" },
+            { file: `${baseURL}その他-オシロイバナ.png`, name: "オシロイバナ" },
+            { file: `${baseURL}その他-カタバミ.png`, name: "カタバミ" }
+        ];
 
-    // ひらがなをカタカナに変換
-    answer = answer.replace(/[\u3041-\u3096]/g, function(match) {
-        return String.fromCharCode(match.charCodeAt(0) + 96);
-    });
+        let currentFlower = {};
+        let score = 0;
+        let timeLeft = 60;
+        let questionCount = 0;
 
-    inputField.value = answer; // カタカナに変換後のテキストをフィールドに反映
+        function startGame() {
+            nextQuestion();
+            setInterval(updateTimer, 1000);
+            document.getElementById("answer").addEventListener("input", enforceKatakana);
+            document.getElementById("answer").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    checkAnswer();
+                }
+            });
+        }
 
-    if (answer === currentFlower.name) {
-        score++;
-        document.getElementById("feedback").innerText = "正解！";
-    } else {
-        document.getElementById("feedback").innerText = "違います！";
-        document.getElementById("correct-answer").innerText = "正解: " + currentFlower.name;
-        document.getElementById("correct-answer").style.display = "block";
-    }
-
-    document.getElementById("score").innerText = score;
-    nextQuestion();
-}
-
-// Enterキーで回答を送信
-document.getElementById("answer").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        checkAnswer();
-    }
-});
+        function nextQuestion() {
+            if (questionCount >= 10 || timeLeft <= 0) {
+                endGame();
+                return;
+            }
+            document.getElementById("correct-answer").style.display = "none";
+            currentFlower = flowerData[Math.floor(Math.random() * flowerData.length)];
+            document.getElementById("flower-image").src = currentFlower.file;
+            document.getElementById("answer").value = "";
+            questionCount++;
+        }
 
         function checkAnswer() {
-            let inputField = document.getElementById("answer");
-            let answer = inputField.value.trim();
-            answer = convertToKatakana(answer);
-            inputField.value = answer;
-
+            let answer = document.getElementById("answer").value.trim();
             if (answer === currentFlower.name) {
                 score++;
                 document.getElementById("feedback").innerText = "正解！";
             } else {
                 document.getElementById("feedback").innerText = "違います！";
-                document.getElementById("correct-answer").innerText = "正解: " + currentFlower.name;
+                document.getElementById("correct-answer").innerText = `正解: ${currentFlower.name}`;
                 document.getElementById("correct-answer").style.display = "block";
             }
             document.getElementById("score").innerText = score;
             nextQuestion();
         }
 
-        document.getElementById("answer").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                checkAnswer();
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                document.getElementById("time").innerText = timeLeft;
+            } else {
+                endGame();
             }
-        });
+        }
+
+        function endGame() {
+            alert("ゲーム終了！ スコア: " + score);
+            document.getElementById("continue-button").style.display = "block";
+        }
+
+        function restartGame() {
+            location.reload();
+        }
+
+        function enforceKatakana(event) {
+            let input = event.target;
+            let value = input.value;
+            let convertedValue = value.replace(/[ぁ-ゖ]/g, function(match) {
+                return String.fromCharCode(match.charCodeAt(0) + 96);
+            }).replace(/[^\u30A0-\u30FF]/g, "");
+            
+            if (value !== convertedValue) {
+                input.value = convertedValue;
+            }
+        }
+
+        window.onload = startGame;
     </script>
 </body>
 </html>

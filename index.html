@@ -51,12 +51,22 @@
             display: none;
             margin-bottom: 10px;
         }
-        img {
+        .image-container {
             width: 250px;
-            height: auto;
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
             border-radius: 10px;
-            margin: 20px 0;
+            margin-bottom: 20px;
+            background-color: #fff;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
         input {
             padding: 10px;
@@ -93,7 +103,9 @@
         <h1>花の名前タイピングゲーム</h1>
         <p class="question">この花の名前は？</p>
         <p id="correct-answer"></p> <!-- 正解表示用 -->
-        <img id="flower-image" src="" alt="花の画像">
+        <div class="image-container">
+            <img id="flower-image" src="" alt="花の画像">
+        </div>
         <p>スコア: <span id="score">0</span></p>
         <p>残り時間: <span id="time">60</span>秒</p>
         <input type="text" id="answer" placeholder="花の名前をカタカナで入力" oninput="validateKatakana(event)">

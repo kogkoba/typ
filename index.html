@@ -54,18 +54,17 @@
     </div>
 
     <script>
-   
-const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
-const flowerData = [
-    { file: `${baseURL}その他-アサガオ.png`, name: "アサガオ" },
-    { file: `${baseURL}その他-アヤメ.png`, name: "アヤメ" },
-    { file: `${baseURL}その他-オオバコ.png`, name: "オオバコ" },
-    { file: `${baseURL}その他-オシロイバナ.png`, name: "オシロイバナ" },
-    { file: `${baseURL}その他-カタバミ.png`, name: "カタバミ" }
-    // ここに69個のデータを追加
-];
-
-
+        const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
+        const flowerData = [
+            { file: `${baseURL}その他-アサガオ.png`, name: "アサガオ" },
+            { file: `${baseURL}その他-アヤメ.png`, name: "アヤメ" },
+            { file: `${baseURL}その他-オオバコ.png`, name: "オオバコ" },
+            { file: `${baseURL}その他-オシロイバナ.png`, name: "オシロイバナ" },
+            { file: `${baseURL}その他-カタバミ.png`, name: "カタバミ" },
+            { file: `${baseURL}その他-グラジオラス.png`, name: "グラジオラス" },
+            { file: `${baseURL}その他-サクラ.png`, name: "サクラ" }
+            // 69個すべて追加
+        ];
 
         let currentFlower = {};
         let score = 0;
@@ -113,6 +112,13 @@ const flowerData = [
             alert("ゲーム終了！ スコア: " + score);
             location.reload();
         }
+
+        // 🔹 エンターキーで `checkAnswer()` を実行
+        document.getElementById("answer").addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                checkAnswer();
+            }
+        });
 
         window.onload = startGame;
     </script>

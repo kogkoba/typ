@@ -8,64 +8,71 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f8f8f8;
-            padding: 20px;
-            background-image: url('https://raw.githubusercontent.com/kogkoba/typ/main/%E6%A4%8D%E7%89%A9%E8%83%8C%E6%99%AF.jpg');
+            background: url('https://raw.githubusercontent.com/kogkoba/typ/main/植物背景.jpg') no-repeat center center fixed;
             background-size: cover;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            background-color: #2a62d1;
+            color: white;
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
         }
         .container {
-            margin: auto;
-            padding: 20px;
+            width: 320px;
+            padding: 15px;
             background: white;
             border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 350px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            display: block;
+            margin: 30px auto;
         }
         img {
             width: 250px;
             height: 250px;
+            object-fit: contain;
             border-radius: 10px;
-            margin: 20px 0;
+            margin: 10px 0;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
         }
-        input, button {
+        input {
             padding: 10px;
             font-size: 16px;
-            margin: 10px;
+            margin-top: 10px;
+            width: 80%;
+            text-transform: uppercase;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        #feedback {
+            font-weight: bold;
+            margin-top: 10px;
         }
         #correct-answer {
-            font-size: 16px;
+            font-size: 18px;
             color: red;
-            margin-bottom: 10px;
-            display: none;
+            font-weight: bold;
         }
         #continue-button {
             display: none;
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #2a62d1;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
+    <h1>花の名前タイピングゲーム</h1>
     <div class="container">
-        <h1>花の名前タイピングゲーム</h1>
         <p>スコア: <span id="score">0</span></p>
         <p>残り時間: <span id="time">60</span>秒</p>
         <p id="correct-answer"></p>
         <img id="flower-image" src="" alt="花の画像">
+        <br>
         <input type="text" id="answer" placeholder="花の名前を入力">
         <button onclick="checkAnswer()">送信</button>
         <p id="feedback"></p>
@@ -80,6 +87,7 @@
             { file: `${baseURL}その他-オオバコ.png`, name: "オオバコ" },
             { file: `${baseURL}その他-オシロイバナ.png`, name: "オシロイバナ" },
             { file: `${baseURL}その他-カタバミ.png`, name: "カタバミ" }
+            // 他の69個のデータを追加
         ];
 
         let currentFlower = {};
@@ -88,14 +96,9 @@
         let questionCount = 0;
 
         function startGame() {
+            document.getElementById("continue-button").style.display = "none";
             nextQuestion();
             setInterval(updateTimer, 1000);
-            document.getElementById("answer").addEventListener("input", enforceKatakana);
-            document.getElementById("answer").addEventListener("keypress", function(event) {
-                if (event.key === "Enter") {
-                    checkAnswer();
-                }
-            });
         }
 
         function nextQuestion() {
@@ -103,7 +106,7 @@
                 endGame();
                 return;
             }
-            document.getElementById("correct-answer").style.display = "none";
+            document.getElementById("correct-answer").innerText = "";
             currentFlower = flowerData[Math.floor(Math.random() * flowerData.length)];
             document.getElementById("flower-image").src = currentFlower.file;
             document.getElementById("answer").value = "";
@@ -112,16 +115,19 @@
 
         function checkAnswer() {
             let answer = document.getElementById("answer").value.trim();
+            answer = answer.replace(/[\u3040-\u309F]/g, (match) => 
+                String.fromCharCode(match.charCodeAt(0) + 96)
+            );
+
             if (answer === currentFlower.name) {
                 score++;
                 document.getElementById("feedback").innerText = "正解！";
+                nextQuestion();
             } else {
                 document.getElementById("feedback").innerText = "違います！";
                 document.getElementById("correct-answer").innerText = `正解: ${currentFlower.name}`;
-                document.getElementById("correct-answer").style.display = "block";
             }
             document.getElementById("score").innerText = score;
-            nextQuestion();
         }
 
         function updateTimer() {
@@ -134,25 +140,26 @@
         }
 
         function endGame() {
-            alert("ゲーム終了！ スコア: " + score);
+            alert(`ゲーム終了！ スコア: ${score}`);
             document.getElementById("continue-button").style.display = "block";
         }
 
         function restartGame() {
-            location.reload();
+            score = 0;
+            timeLeft = 60;
+            questionCount = 0;
+            document.getElementById("score").innerText = score;
+            document.getElementById("time").innerText = timeLeft;
+            document.getElementById("feedback").innerText = "";
+            startGame();
         }
 
-        function enforceKatakana(event) {
-            let input = event.target;
-            let value = input.value;
-            let convertedValue = value.replace(/[ぁ-ゖ]/g, function(match) {
-                return String.fromCharCode(match.charCodeAt(0) + 96);
-            }).replace(/[^\u30A0-\u30FF]/g, "");
-            
-            if (value !== convertedValue) {
-                input.value = convertedValue;
+        document.getElementById("answer").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                checkAnswer();
             }
-        }
+        });
 
         window.onload = startGame;
     </script>

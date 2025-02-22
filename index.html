@@ -28,6 +28,7 @@
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             display: block;
             margin: 30px auto;
+            position: relative;
         }
         img {
             width: 250px;
@@ -63,6 +64,37 @@
             display: none;
             margin-top: 10px;
         }
+        /* 終了時に表示する結果画面 */
+        #result-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+        }
+        #result-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 300px;
+        }
+        #result-content img {
+            width: 200px;
+            margin-bottom: 20px;
+        }
+        #result-content .rank {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -77,6 +109,16 @@
         <button id="submit-button" onclick="checkAnswer()">送信</button>
         <p id="feedback"></p>
         <button id="continue-button" onclick="restartGame()">コンティニュー</button>
+    </div>
+
+    <!-- 結果発表用のオーバーレイ -->
+    <div id="result-screen">
+        <div id="result-content">
+            <img src="https://raw.githubusercontent.com/kogkoba/typ/main/kekka.png" alt="結果発表" />
+            <p id="final-score" style="font-size: 1.2rem; font-weight: bold;"></p>
+            <p class="rank" id="final-rank"></p>
+            <button onclick="closeResult()">閉じる</button>
+        </div>
     </div>
 
     <script>
@@ -98,7 +140,7 @@
         }));
 
         let currentFlower = {};
-        let score = 0; // スコア
+        let score = 0; // スコア（正解数）
         let timeLeft = 60; // 残り秒数
         let gameInterval = null; // タイマー用
 
@@ -158,19 +200,41 @@
             }
         }
 
-        // ゲームが終了したときの処理
+        // ゲーム終了時の処理
         function endGame() {
             clearInterval(gameInterval);
             // 入力と送信ボタンを無効化
             document.getElementById("answer").disabled = true;
             document.getElementById("submit-button").disabled = true;
 
-            // 結果発表
-            document.getElementById("feedback").innerText = `ゲーム終了！あなたの正解数は ${score} です。`;
-            document.getElementById("correct-answer").innerText = "";
+            // スコア（正解数）× 10 の得点
+            const totalPoints = score * 10;
+            // ランク判定
+            let rank = "C！がんばれ";
 
-            // コンティニューボタンを表示
+            // 10問正解ならランクS
+            if (score === 10) {
+                rank = "S！";
+            } else if (totalPoints >= 80) {
+                rank = "A！";
+            } else if (totalPoints >= 60) {
+                rank = "B！";
+            }
+
+            // 結果画面に表示
+            document.getElementById("final-score").innerText = `あなたの得点は ${totalPoints} 点！`;
+            document.getElementById("final-rank").innerText = `ランク: ${rank}`;
+
+            // 結果画面を表示
+            document.getElementById("result-screen").style.display = "block";
+
+            // コンティニューボタン表示
             document.getElementById("continue-button").style.display = "inline-block";
+        }
+
+        // 結果画面を閉じる
+        function closeResult() {
+            document.getElementById("result-screen").style.display = "none";
         }
 
         // ゲームを開始する
@@ -182,6 +246,9 @@
             timeLeft = 60;
             document.getElementById("time").innerText = timeLeft;
             document.getElementById("continue-button").style.display = "none";
+
+            // 結果画面を閉じておく
+            closeResult();
 
             // 最初の問題
             nextQuestion();

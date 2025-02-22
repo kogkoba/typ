@@ -71,10 +71,10 @@
         <p>スコア: <span id="score">0</span></p>
         <p>残り時間: <span id="time">60</span>秒</p>
         <p id="correct-answer"></p>
-        <img id="flower-image" src="" alt="花の画像">
+        <img id="flower-image" src="" alt="花の画像" />
         <br />
         <input type="text" id="answer" placeholder="花の名前を入力" />
-        <button onclick="checkAnswer()">送信</button>
+        <button id="submit-button" onclick="checkAnswer()">送信</button>
         <p id="feedback"></p>
         <button id="continue-button" onclick="restartGame()">コンティニュー</button>
     </div>
@@ -83,7 +83,7 @@
         // 画像URLのベース
         const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
 
-        // 花のデータ: ["科名-和名"] を分割して { file, name } オブジェクト配列に
+        // 花のデータ
         const flowerData = [
             "アブラナ-アブラナ", "アブラナ-イヌガラシ", "アブラナ-カブ", "アブラナ-キャベツ", "アブラナ-ダイコン", "アブラナ-ナズナ", "アブラナ-ワサビ", 
             "イネ-イネ", "イネ-エノコログサ", "イネ-オヒシバ", "イネ-コムギ", "イネ-ササ", "イネ-ススキ", "イネ-スズメノカタビラ", "イネ-スズメノテッポウ", 
@@ -97,10 +97,9 @@
             name: name.split("-")[1]
         }));
 
-        // 現在の問題の花情報
         let currentFlower = {};
         let score = 0; // スコア
-        let timeLeft = 60; // 秒数
+        let timeLeft = 60; // 残り秒数
         let gameInterval = null; // タイマー用
 
         // 次の問題を設定する
@@ -112,7 +111,6 @@
             const img = document.getElementById("flower-image");
             img.src = currentFlower.file;
             img.onerror = function() {
-                // 画像が読み込めない場合
                 console.error("画像読み込みエラー: ", currentFlower.file);
                 img.src = "https://via.placeholder.com/250?text=No+Image";
             };
@@ -124,7 +122,11 @@
             // 入力欄をクリアしてフォーカス
             const answerInput = document.getElementById("answer");
             answerInput.value = "";
+            answerInput.disabled = false;
             answerInput.focus();
+
+            // 送信ボタンも有効に
+            document.getElementById("submit-button").disabled = false;
         }
 
         // 回答チェック
@@ -152,15 +154,28 @@
                 document.getElementById("time").innerText = timeLeft;
             } else {
                 // タイムアップ
-                document.getElementById("feedback").innerText = "時間切れ！";
-                clearInterval(gameInterval);
-                // コンティニュー可能にしたければボタンを表示
-                document.getElementById("continue-button").style.display = "inline-block";
+                endGame();
             }
+        }
+
+        // ゲームが終了したときの処理
+        function endGame() {
+            clearInterval(gameInterval);
+            // 入力と送信ボタンを無効化
+            document.getElementById("answer").disabled = true;
+            document.getElementById("submit-button").disabled = true;
+
+            // 結果発表
+            document.getElementById("feedback").innerText = `ゲーム終了！あなたの正解数は ${score} です。`;
+            document.getElementById("correct-answer").innerText = "";
+
+            // コンティニューボタンを表示
+            document.getElementById("continue-button").style.display = "inline-block";
         }
 
         // ゲームを開始する
         function startGame() {
+            // スコアとタイマーの初期化
             score = 0;
             document.getElementById("score").innerText = score;
 
@@ -187,7 +202,6 @@
         // ページが読み込まれたらゲーム開始とリスナー設定
         window.onload = function() {
             startGame();
-
             // Enterキーでも回答チェックできるように
             document.getElementById("answer").addEventListener("keydown", function(event) {
                 if (event.key === "Enter") {

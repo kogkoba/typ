@@ -81,7 +81,9 @@
 
       <script>
         const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
-        const flowerData = [
+        const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
+
+const flowerData = [
     { file: `${baseURL}${encodeURIComponent("アブラナ-アブラナ.png")}`, name: "アブラナ" },
     { file: `${baseURL}${encodeURIComponent("アブラナ-イヌガラシ.png")}`, name: "イヌガラシ" },
     { file: `${baseURL}${encodeURIComponent("アブラナ-カブ.png")}`, name: "カブ" },
@@ -106,9 +108,36 @@
     { file: `${baseURL}${encodeURIComponent("ウリ-キュウリ.png")}`, name: "キュウリ" },
     { file: `${baseURL}${encodeURIComponent("ウリ-スイカ.png")}`, name: "スイカ" },
     { file: `${baseURL}${encodeURIComponent("ウリ-ヘチマ.png")}`, name: "ヘチマ" },
-    { file: `${baseURL}${encodeURIComponent("ウリ-ユウガオ.png")}`, name: "ユウガオ" }
-    // ここに続くデータも同様にエンコードする
+    { file: `${baseURL}${encodeURIComponent("ウリ-ユウガオ.png")}`, name: "ユウガオ" },
+    { file: `${baseURL}${encodeURIComponent("キク-オナモミ.png")}`, name: "オナモミ" },
+    { file: `${baseURL}${encodeURIComponent("キク-キク.png")}`, name: "キク" },
+    { file: `${baseURL}${encodeURIComponent("キク-コスモス.png")}`, name: "コスモス" },
+    { file: `${baseURL}${encodeURIComponent("キク-セイタカアワダチソウ.png")}`, name: "セイタカアワダチソウ" },
+    { file: `${baseURL}${encodeURIComponent("キク-センダングサ.png")}`, name: "センダングサ" },
+    { file: `${baseURL}${encodeURIComponent("キク-ダリア.png")}`, name: "ダリア" },
+    { file: `${baseURL}${encodeURIComponent("キク-タンポポ.png")}`, name: "タンポポ" },
+    { file: `${baseURL}${encodeURIComponent("キク-ノアザミ.png")}`, name: "ノアザミ" },
+    { file: `${baseURL}${encodeURIComponent("キク-ノゲシ.png")}`, name: "ノゲシ" },
+    { file: `${baseURL}${encodeURIComponent("キク-ハルジオン.png")}`, name: "ハルジオン" },
+    { file: `${baseURL}${encodeURIComponent("キク-ヒマワリ.png")}`, name: "ヒマワリ" },
+    { file: `${baseURL}${encodeURIComponent("キク-ヒメジョオン.png")}`, name: "ヒメジョオン" },
+    { file: `${baseURL}${encodeURIComponent("キク-ヒャクニチソウ.png")}`, name: "ヒャクニチソウ" },
+    { file: `${baseURL}${encodeURIComponent("キク-マーガレット.png")}`, name: "マーガレット" },
+    { file: `${baseURL}${encodeURIComponent("キク-マリーゴールド.png")}`, name: "マリーゴールド" },
+    { file: `${baseURL}${encodeURIComponent("その他-アサガオ.png")}`, name: "アサガオ" },
+    { file: `${baseURL}${encodeURIComponent("その他-アヤメ.png")}`, name: "アヤメ" },
+    { file: `${baseURL}${encodeURIComponent("その他-オオバコ.png")}`, name: "オオバコ" },
+    { file: `${baseURL}${encodeURIComponent("その他-オシロイバナ.png")}`, name: "オシロイバナ" },
+    { file: `${baseURL}${encodeURIComponent("その他-カタバミ.png")}`, name: "カタバミ" },
+    { file: `${baseURL}${encodeURIComponent("その他-ホウセンカ.png")}`, name: "ホウセンカ" },
+    { file: `${baseURL}${encodeURIComponent("その他-ヤドリギ.png")}`, name: "ヤドリギ" },
+    { file: `${baseURL}${encodeURIComponent("その他-ヤマブキ.png")}`, name: "ヤマブキ" },
+    { file: `${baseURL}${encodeURIComponent("その他-ユリ.png")}`, name: "ユリ" },
+    { file: `${baseURL}${encodeURIComponent("マメ-ネムノキ.png")}`, name: "ネムノキ" },
+    { file: `${baseURL}${encodeURIComponent("マメ-ハギ.png")}`, name: "ハギ" },
+    { file: `${baseURL}${encodeURIComponent("マメ-フジ.png")}`, name: "フジ" }
 ];
+
 
         let currentFlower = {};
         let score = 0;

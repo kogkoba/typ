@@ -125,6 +125,11 @@
         // 画像URLのベース
         const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
 
+        // BGM, 正解/不正解音声ファイルのURL
+        const BGM_URL = `${baseURL}BGM.mp3`;
+        const SOUND_CORRECT_URL = `${baseURL}アタリ.mp3`;
+        const SOUND_WRONG_URL = `${baseURL}はずれ.mp3`;
+
         // 花のデータ
         const flowerData = [
             "アブラナ-アブラナ", "アブラナ-イヌガラシ", "アブラナ-カブ", "アブラナ-キャベツ", "アブラナ-ダイコン", "アブラナ-ナズナ", "アブラナ-ワサビ", 
@@ -139,10 +144,49 @@
             name: name.split("-")[1]
         }));
 
+        // オーディオオブジェクト
+        let bgmAudio = null;
+        let correctAudio = null;
+        let wrongAudio = null;
+
         let currentFlower = {};
         let score = 0; // スコア（正解数）
         let timeLeft = 60; // 残り秒数
         let gameInterval = null; // タイマー用
+
+        // ==========================
+        // ゲームのロジック
+        // ==========================
+        
+        // BGMを再生
+        function playBGM() {
+            if (!bgmAudio) {
+                bgmAudio = new Audio(BGM_URL);
+                bgmAudio.loop = true; // ループ再生
+            }
+            bgmAudio.play().catch(err => {
+                console.warn("自動再生がブロックされました: ", err);
+            });
+        }
+
+        // 効果音を再生
+        function playSE(isCorrect) {
+            if (isCorrect) {
+                if (!correctAudio) {
+                    correctAudio = new Audio(SOUND_CORRECT_URL);
+                } else {
+                    correctAudio.currentTime = 0;
+                }
+                correctAudio.play();
+            } else {
+                if (!wrongAudio) {
+                    wrongAudio = new Audio(SOUND_WRONG_URL);
+                } else {
+                    wrongAudio.currentTime = 0;
+                }
+                wrongAudio.play();
+            }
+        }
 
         // 次の問題を設定する
         function nextQuestion() {
@@ -180,10 +224,12 @@
                 document.getElementById("feedback").innerText = "正解！";
                 score++;
                 document.getElementById("score").innerText = score;
+                playSE(true);
             } else {
                 // 不正解
                 document.getElementById("feedback").innerText = "不正解...";
                 document.getElementById("correct-answer").innerText = "正解は：" + currentFlower.name;
+                playSE(false);
             }
             // 1秒後に次の問題を表示
             setTimeout(nextQuestion, 1000);
@@ -252,6 +298,9 @@
 
             // 最初の問題
             nextQuestion();
+
+            // BGM 再生開始
+            playBGM();
 
             // 既にタイマーが走っていた場合一旦クリア
             if (gameInterval) {

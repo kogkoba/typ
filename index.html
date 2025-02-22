@@ -79,9 +79,9 @@
         <button id="continue-button" onclick="restartGame()">コンティニュー</button>
     </div>
 
-      <script>
+    <script>
         const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
-        const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
+ const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
 
 const flowerData = [
     { file: `${baseURL}${encodeURIComponent("アブラナ-アブラナ.png")}`, name: "アブラナ" },
@@ -138,42 +138,9 @@ const flowerData = [
     { file: `${baseURL}${encodeURIComponent("マメ-フジ.png")}`, name: "フジ" }
 ];
 
-
-        let currentFlower = {};
-        let score = 0;
-        let timeLeft = 60;
-        let questionCount = 0;
-
-        function startGame() {
-            document.getElementById("continue-button").style.display = "none";
-            nextQuestion();
-            setInterval(updateTimer, 1000);
-        }
-
-        function nextQuestion() {
-            if (questionCount >= 10 || timeLeft <= 0) {
-                endGame();
-                return;
-            }
-            document.getElementById("correct-answer").innerText = "";
-            currentFlower = flowerData[Math.floor(Math.random() * flowerData.length)];
-            document.getElementById("flower-image").src = currentFlower.file;
-            document.getElementById("answer").value = "";
-            document.getElementById("feedback").innerText = "";
-            questionCount++;
-        }
-
-        document.getElementById("answer").addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                checkAnswer();
-                if (document.getElementById("feedback").innerText === "違います！") {
-                    nextQuestion();
-                }
-            }
-        });
-
-        window.onload = startGame;
+        window.onload = function() {
+            startGame();
+        };
     </script>
 </body>
 </html>

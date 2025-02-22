@@ -83,15 +83,23 @@
         const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
         const flowerData = [
             "アブラナ-アブラナ", "アブラナ-イヌガラシ", "アブラナ-カブ", "アブラナ-キャベツ", "アブラナ-ダイコン", "アブラナ-ナズナ", "アブラナ-ワサビ", "イネ-イネ", "イネ-エノコログサ", "イネ-オヒシバ", "イネ-コムギ", "イネ-ササ", "イネ-ススキ", "イネ-スズメノカタビラ", "イネ-スズメノテッポウ", "イネ-タケ", "イネ-トウモロコシ", "イネ-メヒシバ", "ウリ-アマチャヅル", "ウリ-カボチャ", "ウリ-カラスウリ", "ウリ-キュウリ", "ウリ-スイカ", "ウリ-ヘチマ", "ウリ-ユウガオ", "キク-オナモミ", "キク-キク", "キク-コスモス", "キク-セイタカアワダチソウ", "キク-センダングサ", "キク-ダリア", "キク-タンポポ", "キク-ノアザミ", "キク-ノゲシ", "キク-ハルジオン", "キク-ヒマワリ", "キク-ヒメジョオン", "キク-ヒャクニチソウ", "キク-マーガレット", "キク-マリーゴールド", "その他-アサガオ", "その他-アヤメ", "その他-オオバコ", "その他-オシロイバナ", "その他-カタバミ", "その他-ホウセンカ", "その他-ヤドリギ", "その他-ヤマブキ", "その他-ユリ", "マメ-ネムノキ", "マメ-ハギ", "マメ-フジ"
-        ].map(name => ({ file: `${baseURL}${encodeURIComponent(name)}.png`, name: name.split("-")[1] }));
+        ].map(name => ({ file: `${baseURL}${name.replace(/-/g, '_')}.png`, name: name.split("-")[1] }));
 
         let currentFlower = {};
-        let score = 0;
-        let timeLeft = 60;
-        let questionCount = 0;
+
+        function nextQuestion() {
+            currentFlower = flowerData[Math.floor(Math.random() * flowerData.length)];
+            console.log("画像URL: ", currentFlower.file);
+            const imgElement = document.getElementById("flower-image");
+            imgElement.src = currentFlower.file;
+            imgElement.onerror = function() {
+                console.error("画像が読み込めません: ", currentFlower.file);
+                imgElement.src = "https://via.placeholder.com/250?text=No+Image";
+            };
+        }
 
         window.onload = function() {
-            startGame();
+            nextQuestion();
             document.getElementById("answer").addEventListener("keydown", function(event) {
                 if (event.key === "Enter") {
                     event.preventDefault();

@@ -98,6 +98,15 @@
             setInterval(updateTimer, 1000);
         }
 
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                document.getElementById("time").innerText = timeLeft;
+            } else {
+                endGame();
+            }
+        }
+
         function nextQuestion() {
             if (questionCount >= 10 || timeLeft <= 0) {
                 endGame();

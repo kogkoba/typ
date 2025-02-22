@@ -81,10 +81,9 @@
 
     <script>
         const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
-        const flowerData = [...Array(69).keys()].map(i => {
-            let name = ["アブラナ", "イヌガラシ", "カブ", "キャベツ", "ダイコン", "ナズナ", "ワサビ", "イネ", "エノコログサ", "オヒシバ", "コムギ", "ササ", "ススキ", "スズメノカタビラ", "スズメノテッポウ", "タケ", "トウモロコシ", "メヒシバ", "アマチャヅル", "カボチャ", "カラスウリ", "キュウリ", "スイカ", "ヘチマ", "ユウガオ", "オナモミ", "キク", "コスモス", "セイタカアワダチソウ", "センダングサ", "ダリア", "タンポポ", "ノアザミ", "ノゲシ", "ハルジオン", "ヒマワリ", "ヒメジョオン", "ヒャクニチソウ", "マーガレット", "マリーゴールド", "アサガオ", "アヤメ", "オオバコ", "オシロイバナ", "カタバミ", "グラジオラス", "サクラ", "ジャガイモ", "スイセン", "ツツジ", "ツバキ", "ツユクサ", "ヒガンバナ", "ヒヤシンス", "ホウセンカ", "ヤドリギ", "ヤマブキ", "ユリ", "インゲンマメ", "エンドウ", "オジギソウ", "カラスノエンドウ", "クズ", "ゲンゲ", "シロツメグサ", "スイートピー", "ネムノキ", "ハギ", "フジ"][i];
-            return { file: `${baseURL}${encodeURIComponent(name)}.png`, name: name };
-        });
+        const flowerData = [
+            "アブラナ-アブラナ", "アブラナ-イヌガラシ", "アブラナ-カブ", "アブラナ-キャベツ", "アブラナ-ダイコン", "アブラナ-ナズナ", "アブラナ-ワサビ", "イネ-イネ", "イネ-エノコログサ", "イネ-オヒシバ", "イネ-コムギ", "イネ-ササ", "イネ-ススキ", "イネ-スズメノカタビラ", "イネ-スズメノテッポウ", "イネ-タケ", "イネ-トウモロコシ", "イネ-メヒシバ", "ウリ-アマチャヅル", "ウリ-カボチャ", "ウリ-カラスウリ", "ウリ-キュウリ", "ウリ-スイカ", "ウリ-ヘチマ", "ウリ-ユウガオ", "キク-オナモミ", "キク-キク", "キク-コスモス", "キク-セイタカアワダチソウ", "キク-センダングサ", "キク-ダリア", "キク-タンポポ", "キク-ノアザミ", "キク-ノゲシ", "キク-ハルジオン", "キク-ヒマワリ", "キク-ヒメジョオン", "キク-ヒャクニチソウ", "キク-マーガレット", "キク-マリーゴールド", "その他-アサガオ", "その他-アヤメ", "その他-オオバコ", "その他-オシロイバナ", "その他-カタバミ", "その他-ホウセンカ", "その他-ヤドリギ", "その他-ヤマブキ", "その他-ユリ", "マメ-ネムノキ", "マメ-ハギ", "マメ-フジ"
+        ].map(name => ({ file: `${baseURL}${encodeURIComponent(name)}.png`, name: name.split("-")[1] }));
 
         let currentFlower = {};
         let score = 0;
@@ -92,15 +91,9 @@
         let questionCount = 0;
 
         function startGame() {
-            console.log(flowerData);
+            console.log("ゲーム開始");
+            console.log("flowerDataの数:", flowerData.length);
             document.getElementById("continue-button").style.display = "none";
-            score = 0;
-            timeLeft = 60;
-            questionCount = 0;
-            document.getElementById("score").innerText = score;
-            document.getElementById("time").innerText = timeLeft;
-            document.getElementById("feedback").innerText = "";
-            document.getElementById("correct-answer").innerText = "";
             nextQuestion();
             setInterval(updateTimer, 1000);
         }
@@ -110,10 +103,8 @@
                 endGame();
                 return;
             }
-            document.getElementById("correct-answer").innerText = "";
-            document.getElementById("feedback").innerText = "";
             currentFlower = flowerData[Math.floor(Math.random() * flowerData.length)];
-            console.log("選ばれた花: ", currentFlower);
+            console.log("次の問題へ", currentFlower);
             document.getElementById("flower-image").src = currentFlower.file;
             document.getElementById("flower-image").onerror = function() {
                 console.error("画像が読み込めません: ", currentFlower.file);

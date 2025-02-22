@@ -15,7 +15,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-image: url('https://raw.githubusercontent.com/kogkoba/typ/main/植物背景.jpg');
+            background-image: url('https://raw.githubusercontent.com/kogkoba/typ/main/%E6%A4%8D%E7%89%A9%E8%83%8C%E6%99%AF.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -102,95 +102,41 @@
     <div class="container">
         <h1>花の名前タイピングゲーム</h1>
         <p class="question">この花の名前は？</p>
-        <p id="correct-answer"></p> <!-- 正解表示用 -->
+        <p id="correct-answer"></p>
         <div class="image-container">
             <img id="flower-image" src="" alt="花の画像">
         </div>
         <p>スコア: <span id="score">0</span></p>
         <p>残り時間: <span id="time">60</span>秒</p>
-        <input type="text" id="answer" placeholder="花の名前をカタカナで入力" oninput="validateKatakana(event)">
+        <input type="text" id="answer" placeholder="花の名前をカタカナで入力">
         <p id="feedback"></p>
         <button onclick="checkAnswer()">送信</button>
         <button id="continue-button" onclick="restartGame()">コンティニュー</button>
     </div>
 
     <script>
-        const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
-        const flowerData = [
-            { file: `${baseURL}その他-アサガオ.png`, name: "アサガオ" },
-            { file: `${baseURL}その他-アヤメ.png`, name: "アヤメ" },
-            { file: `${baseURL}その他-オオバコ.png`, name: "オオバコ" },
-            { file: `${baseURL}その他-オシロイバナ.png`, name: "オシロイバナ" },
-            { file: `${baseURL}その他-カタバミ.png`, name: "カタバミ" }
-            // ここに69個のデータを追加
-        ];
-
-        let currentFlower = {};
-        let score = 0;
-        let timeLeft = 60;
-        let questionCount = 0;
-        let timer;
-
-        function startGame() {
-            nextQuestion();
-            timer = setInterval(updateTimer, 1000);
-        }
-
-        function nextQuestion() {
-            if (questionCount >= 10 || timeLeft <= 0) {
-                endGame();
-                return;
-            }
-            currentFlower = flowerData[Math.floor(Math.random() * flowerData.length)];
-            document.getElementById("flower-image").src = currentFlower.file;
-            document.getElementById("answer").value = "";
-            document.getElementById("correct-answer").style.display = "none"; // 正解非表示
-            document.getElementById("feedback").innerText = "";
-            questionCount++;
+        function convertToKatakana(str) {
+            return str.replace(/[ぁ-ゖ]/g, function(match) {
+                return String.fromCharCode(match.charCodeAt(0) + 96);
+            });
         }
 
         function checkAnswer() {
-            let answer = document.getElementById("answer").value.trim();
+            let inputField = document.getElementById("answer");
+            let answer = inputField.value.trim();
+            answer = convertToKatakana(answer);
+            inputField.value = answer;
+
             if (answer === currentFlower.name) {
                 score++;
                 document.getElementById("feedback").innerText = "正解！";
             } else {
                 document.getElementById("feedback").innerText = "違います！";
                 document.getElementById("correct-answer").innerText = "正解: " + currentFlower.name;
-                document.getElementById("correct-answer").style.display = "block"; // 正解を表示
+                document.getElementById("correct-answer").style.display = "block";
             }
             document.getElementById("score").innerText = score;
             nextQuestion();
-        }
-
-        function updateTimer() {
-            if (timeLeft > 0) {
-                timeLeft--;
-                document.getElementById("time").innerText = timeLeft;
-            } else {
-                endGame();
-            }
-        }
-
-        function endGame() {
-            clearInterval(timer);
-            alert("ゲーム終了！ スコア: " + score);
-            document.getElementById("continue-button").style.display = "block";
-        }
-
-        function restartGame() {
-            score = 0;
-            timeLeft = 60;
-            questionCount = 0;
-            document.getElementById("score").innerText = score;
-            document.getElementById("time").innerText = timeLeft;
-            document.getElementById("continue-button").style.display = "none";
-            startGame();
-        }
-
-        function validateKatakana(event) {
-            let inputField = event.target;
-            inputField.value = inputField.value.replace(/[^ァ-ヶー]/g, ""); // カタカナ以外を削除
         }
 
         document.getElementById("answer").addEventListener("keypress", function(event) {
@@ -198,8 +144,6 @@
                 checkAnswer();
             }
         });
-
-        window.onload = startGame;
     </script>
 </body>
 </html>

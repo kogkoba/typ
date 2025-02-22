@@ -115,11 +115,36 @@
     </div>
 
     <script>
-        function convertToKatakana(str) {
-            return str.replace(/[ぁ-ゖ]/g, function(match) {
-                return String.fromCharCode(match.charCodeAt(0) + 96);
-            });
-        }
+     function checkAnswer() {
+    let inputField = document.getElementById("answer");
+    let answer = inputField.value.trim();
+
+    // ひらがなをカタカナに変換
+    answer = answer.replace(/[\u3041-\u3096]/g, function(match) {
+        return String.fromCharCode(match.charCodeAt(0) + 96);
+    });
+
+    inputField.value = answer; // カタカナに変換後のテキストをフィールドに反映
+
+    if (answer === currentFlower.name) {
+        score++;
+        document.getElementById("feedback").innerText = "正解！";
+    } else {
+        document.getElementById("feedback").innerText = "違います！";
+        document.getElementById("correct-answer").innerText = "正解: " + currentFlower.name;
+        document.getElementById("correct-answer").style.display = "block";
+    }
+
+    document.getElementById("score").innerText = score;
+    nextQuestion();
+}
+
+// Enterキーで回答を送信
+document.getElementById("answer").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        checkAnswer();
+    }
+});
 
         function checkAnswer() {
             let inputField = document.getElementById("answer");

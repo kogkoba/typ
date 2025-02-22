@@ -86,20 +86,22 @@
         ].map(name => ({ file: `${baseURL}${encodeURIComponent(name)}.png`, name: name.split("-")[1] }));
 
         let currentFlower = {};
+        let timeLeft = 60;
 
-        function nextQuestion() {
-            currentFlower = flowerData[Math.floor(Math.random() * flowerData.length)];
-            console.log("画像URL: ", currentFlower.file);
-            const imgElement = document.getElementById("flower-image");
-            imgElement.src = currentFlower.file;
-            imgElement.onerror = function() {
-                console.error("画像が読み込めません: ", currentFlower.file);
-                imgElement.src = "https://via.placeholder.com/250?text=No+Image";
-            };
+        function startGame() {
+            nextQuestion();
+            setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                document.getElementById("time").innerText = timeLeft;
+            }
         }
 
         window.onload = function() {
-            nextQuestion();
+            startGame();
             document.getElementById("answer").addEventListener("keydown", function(event) {
                 if (event.key === "Enter") {
                     event.preventDefault();

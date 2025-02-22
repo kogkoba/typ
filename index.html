@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>花の名前タイピングゲーム</title>
     <style>
         body {
@@ -72,36 +72,123 @@
         <p>残り時間: <span id="time">60</span>秒</p>
         <p id="correct-answer"></p>
         <img id="flower-image" src="" alt="花の画像">
-        <br>
-        <input type="text" id="answer" placeholder="花の名前を入力">
+        <br />
+        <input type="text" id="answer" placeholder="花の名前を入力" />
         <button onclick="checkAnswer()">送信</button>
         <p id="feedback"></p>
         <button id="continue-button" onclick="restartGame()">コンティニュー</button>
     </div>
 
     <script>
+        // 画像URLのベース
         const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
+
+        // 花のデータ: ["科名-和名"] を分割して { file, name } オブジェクト配列に
         const flowerData = [
-            "アブラナ-アブラナ", "アブラナ-イヌガラシ", "アブラナ-カブ", "アブラナ-キャベツ", "アブラナ-ダイコン", "アブラナ-ナズナ", "アブラナ-ワサビ", "イネ-イネ", "イネ-エノコログサ", "イネ-オヒシバ", "イネ-コムギ", "イネ-ササ", "イネ-ススキ", "イネ-スズメノカタビラ", "イネ-スズメノテッポウ", "イネ-タケ", "イネ-トウモロコシ", "イネ-メヒシバ", "ウリ-アマチャヅル", "ウリ-カボチャ", "ウリ-カラスウリ", "ウリ-キュウリ", "ウリ-スイカ", "ウリ-ヘチマ", "ウリ-ユウガオ", "キク-オナモミ", "キク-キク", "キク-コスモス", "キク-セイタカアワダチソウ", "キク-センダングサ", "キク-ダリア", "キク-タンポポ", "キク-ノアザミ", "キク-ノゲシ", "キク-ハルジオン", "キク-ヒマワリ", "キク-ヒメジョオン", "キク-ヒャクニチソウ", "キク-マーガレット", "キク-マリーゴールド", "その他-アサガオ", "その他-アヤメ", "その他-オオバコ", "その他-オシロイバナ", "その他-カタバミ", "その他-ホウセンカ", "その他-ヤドリギ", "その他-ヤマブキ", "その他-ユリ", "マメ-ネムノキ", "マメ-ハギ", "マメ-フジ"
-        ].map(name => ({ file: `${baseURL}${encodeURIComponent(name)}.png`, name: name.split("-")[1] }));
+            "アブラナ-アブラナ", "アブラナ-イヌガラシ", "アブラナ-カブ", "アブラナ-キャベツ", "アブラナ-ダイコン", "アブラナ-ナズナ", "アブラナ-ワサビ", 
+            "イネ-イネ", "イネ-エノコログサ", "イネ-オヒシバ", "イネ-コムギ", "イネ-ササ", "イネ-ススキ", "イネ-スズメノカタビラ", "イネ-スズメノテッポウ", 
+            "イネ-タケ", "イネ-トウモロコシ", "イネ-メヒシバ", "ウリ-アマチャヅル", "ウリ-カボチャ", "ウリ-カラスウリ", "ウリ-キュウリ", "ウリ-スイカ", 
+            "ウリ-ヘチマ", "ウリ-ユウガオ", "キク-オナモミ", "キク-キク", "キク-コスモス", "キク-セイタカアワダチソウ", "キク-センダングサ", 
+            "キク-ダリア", "キク-タンポポ", "キク-ノアザミ", "キク-ノゲシ", "キク-ハルジオン", "キク-ヒマワリ", "キク-ヒメジョオン", "キク-ヒャクニチソウ", 
+            "キク-マーガレット", "キク-マリーゴールド", "その他-アサガオ", "その他-アヤメ", "その他-オオバコ", "その他-オシロイバナ", "その他-カタバミ", 
+            "その他-ホウセンカ", "その他-ヤドリギ", "その他-ヤマブキ", "その他-ユリ", "マメ-ネムノキ", "マメ-ハギ", "マメ-フジ"
+        ].map(name => ({
+            file: `${baseURL}${encodeURIComponent(name)}.png`,
+            name: name.split("-")[1]
+        }));
 
+        // 現在の問題の花情報
         let currentFlower = {};
-        let timeLeft = 60;
+        let score = 0; // スコア
+        let timeLeft = 60; // 秒数
+        let gameInterval = null; // タイマー用
 
-        function startGame() {
-            nextQuestion();
-            setInterval(updateTimer, 1000);
+        // 次の問題を設定する
+        function nextQuestion() {
+            // ランダムに花を一つ選択
+            currentFlower = flowerData[Math.floor(Math.random() * flowerData.length)];
+
+            // 画像を更新
+            const img = document.getElementById("flower-image");
+            img.src = currentFlower.file;
+            img.onerror = function() {
+                // 画像が読み込めない場合
+                console.error("画像読み込みエラー: ", currentFlower.file);
+                img.src = "https://via.placeholder.com/250?text=No+Image";
+            };
+
+            // フィードバックエリアをリセット
+            document.getElementById("feedback").innerText = "";
+            document.getElementById("correct-answer").innerText = "";
+
+            // 入力欄をクリアしてフォーカス
+            const answerInput = document.getElementById("answer");
+            answerInput.value = "";
+            answerInput.focus();
         }
 
+        // 回答チェック
+        function checkAnswer() {
+            const answerInput = document.getElementById("answer");
+            const userAnswer = answerInput.value.trim();
+            if (userAnswer === currentFlower.name) {
+                // 正解
+                document.getElementById("feedback").innerText = "正解！";
+                score++;
+                document.getElementById("score").innerText = score;
+            } else {
+                // 不正解
+                document.getElementById("feedback").innerText = "不正解...";
+                document.getElementById("correct-answer").innerText = "正解は：" + currentFlower.name;
+            }
+            // 1秒後に次の問題を表示
+            setTimeout(nextQuestion, 1000);
+        }
+
+        // タイマーを更新
         function updateTimer() {
             if (timeLeft > 0) {
                 timeLeft--;
                 document.getElementById("time").innerText = timeLeft;
+            } else {
+                // タイムアップ
+                document.getElementById("feedback").innerText = "時間切れ！";
+                clearInterval(gameInterval);
+                // コンティニュー可能にしたければボタンを表示
+                document.getElementById("continue-button").style.display = "inline-block";
             }
         }
 
+        // ゲームを開始する
+        function startGame() {
+            score = 0;
+            document.getElementById("score").innerText = score;
+
+            timeLeft = 60;
+            document.getElementById("time").innerText = timeLeft;
+            document.getElementById("continue-button").style.display = "none";
+
+            // 最初の問題
+            nextQuestion();
+
+            // 既にタイマーが走っていた場合一旦クリア
+            if (gameInterval) {
+                clearInterval(gameInterval);
+            }
+            // 毎秒updateTimerを呼び出す
+            gameInterval = setInterval(updateTimer, 1000);
+        }
+
+        // コンティニュー（再スタート）
+        function restartGame() {
+            startGame();
+        }
+
+        // ページが読み込まれたらゲーム開始とリスナー設定
         window.onload = function() {
             startGame();
+
+            // Enterキーでも回答チェックできるように
             document.getElementById("answer").addEventListener("keydown", function(event) {
                 if (event.key === "Enter") {
                     event.preventDefault();

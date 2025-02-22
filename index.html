@@ -32,6 +32,25 @@
             max-width: 400px;
             width: 90%;
         }
+        h1 {
+            background-color: #2a62d1;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        #correct-answer {
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+            display: none;
+            margin-bottom: 10px;
+        }
         img {
             width: 250px;
             height: auto;
@@ -39,10 +58,22 @@
             margin: 20px 0;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
         }
-        input, button {
+        input {
             padding: 10px;
             font-size: 16px;
-            margin: 10px;
+            margin-top: 10px;
+            width: 80%;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            background-color: #2a62d1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
         }
         #continue-button {
             display: none;
@@ -60,11 +91,14 @@
 <body>
     <div class="container">
         <h1>花の名前タイピングゲーム</h1>
+        <p class="question">この花の名前は？</p>
+        <p id="correct-answer"></p> <!-- 正解表示用 -->
+        <img id="flower-image" src="" alt="花の画像">
         <p>スコア: <span id="score">0</span></p>
         <p>残り時間: <span id="time">60</span>秒</p>
-        <img id="flower-image" src="" alt="花の画像">
-        <input type="text" id="answer" placeholder="花の名前を入力">
+        <input type="text" id="answer" placeholder="花の名前をカタカナで入力" oninput="validateKatakana(event)">
         <p id="feedback"></p>
+        <button onclick="checkAnswer()">送信</button>
         <button id="continue-button" onclick="restartGame()">コンティニュー</button>
     </div>
 
@@ -98,6 +132,8 @@
             currentFlower = flowerData[Math.floor(Math.random() * flowerData.length)];
             document.getElementById("flower-image").src = currentFlower.file;
             document.getElementById("answer").value = "";
+            document.getElementById("correct-answer").style.display = "none"; // 正解非表示
+            document.getElementById("feedback").innerText = "";
             questionCount++;
         }
 
@@ -108,6 +144,8 @@
                 document.getElementById("feedback").innerText = "正解！";
             } else {
                 document.getElementById("feedback").innerText = "違います！";
+                document.getElementById("correct-answer").innerText = "正解: " + currentFlower.name;
+                document.getElementById("correct-answer").style.display = "block"; // 正解を表示
             }
             document.getElementById("score").innerText = score;
             nextQuestion();
@@ -136,6 +174,11 @@
             document.getElementById("time").innerText = timeLeft;
             document.getElementById("continue-button").style.display = "none";
             startGame();
+        }
+
+        function validateKatakana(event) {
+            let inputField = event.target;
+            inputField.value = inputField.value.replace(/[^ァ-ヶー]/g, ""); // カタカナ以外を削除
         }
 
         document.getElementById("answer").addEventListener("keypress", function(event) {

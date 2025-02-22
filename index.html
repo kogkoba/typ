@@ -81,13 +81,10 @@
 
     <script>
         const baseURL = "https://raw.githubusercontent.com/kogkoba/typ/main/";
-        const flowerData = [
-            { file: `${baseURL}アブラナ-アブラナ.png`, name: "アブラナ" },
-            { file: `${baseURL}アブラナ-イヌガラシ.png`, name: "イヌガラシ" },
-            { file: `${baseURL}アブラナ-カブ.png`, name: "カブ" },
-            { file: `${baseURL}アブラナ-キャベツ.png`, name: "キャベツ" },
-            { file: `${baseURL}アブラナ-ダイコン.png`, name: "ダイコン" }
-        ];
+        const flowerData = [...Array(69).keys()].map(i => {
+            let name = ["アブラナ", "イヌガラシ", "カブ", "キャベツ", "ダイコン", "ナズナ", "ワサビ", "イネ", "エノコログサ", "オヒシバ", "コムギ", "ササ", "ススキ", "スズメノカタビラ", "スズメノテッポウ", "タケ", "トウモロコシ", "メヒシバ", "アマチャヅル", "カボチャ", "カラスウリ", "キュウリ", "スイカ", "ヘチマ", "ユウガオ", "オナモミ", "キク", "コスモス", "セイタカアワダチソウ", "センダングサ", "ダリア", "タンポポ", "ノアザミ", "ノゲシ", "ハルジオン", "ヒマワリ", "ヒメジョオン", "ヒャクニチソウ", "マーガレット", "マリーゴールド", "アサガオ", "アヤメ", "オオバコ", "オシロイバナ", "カタバミ", "グラジオラス", "サクラ", "ジャガイモ", "スイセン", "ツツジ", "ツバキ", "ツユクサ", "ヒガンバナ", "ヒヤシンス", "ホウセンカ", "ヤドリギ", "ヤマブキ", "ユリ", "インゲンマメ", "エンドウ", "オジギソウ", "カラスノエンドウ", "クズ", "ゲンゲ", "シロツメグサ", "スイートピー", "ネムノキ", "ハギ", "フジ"][i];
+            return { file: `${baseURL}${encodeURIComponent(name)}.png`, name: name };
+        });
 
         let currentFlower = {};
         let score = 0;
@@ -124,14 +121,6 @@
             document.getElementById("answer").value = "";
             questionCount++;
         }
-
-        document.getElementById("answer").addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                checkAnswer();
-                setTimeout(nextQuestion, 1000);
-            }
-        });
 
         window.onload = function() {
             startGame();
